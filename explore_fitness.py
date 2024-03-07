@@ -127,8 +127,10 @@ def evaluate_swap(fitness_1, fitness_2, temp_1 = 0.25, temp_2 = 0.4):
     --------------------------------------
     (bool) (decision to accept or reject a move)
     """
-    
-    swap_probability = min(1, (np.exp(-(fitness_1 - fitness_2)*(1/temp_1 - 1/temp_2))))
+
+    log_swap_prob = -(fitness_1 - fitness_2)*(1/temp_1 - 1/temp_2)
+    log_swap_prob = min(0, log_swap_prob)
+    swap_probability = np.exp(log_swap_prob)
     
     #print(swap_probability)
     
@@ -358,8 +360,10 @@ def test_evaluate_crossover(old_fitness_pair, new_fitness_pair,
     
     temp1 = temperature_pair[0]
     temp2 = temperature_pair[1]
-    
-    swap_probability = min(1, np.exp((new_fitness_1 - old_fitness_1)/temp1 - (new_fitness_2 - old_fitness_2)/temp2))
+
+    log_swap_prob = (new_fitness_1 - old_fitness_1)/temp1 - (new_fitness_2 - old_fitness_2)/temp2
+    log_swap_prob = min(0, log_swap_prob)
+    swap_probability = np.exp(log_swap_prob)
 
     return (swap_probability)
 
@@ -468,8 +472,10 @@ def perform_and_evaluate_crossover(sequence_list,
     
     temp1 = temperature_list[crossover_pair[0]]
     temp2 = temperature_list[crossover_pair[1]]
-    
-    swap_probability = min(1, np.exp((new_fitness_1 - fitness_1)/temp1 - (new_fitness_2 - fitness_2)/temp2))
+
+    log_swap_prob = (new_fitness_1 - fitness_1)/temp1 - (new_fitness_2 - fitness_2)/temp2
+    log_swap_prob = min(0, log_swap_prob)
+    swap_probability = np.exp(log_swap_prob)
     
     if swap_probability == 1: 
         
